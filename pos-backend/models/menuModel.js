@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// Reference to the Dish model
 const menuSchema = new mongoose.Schema(
   {
     name: {
@@ -16,11 +15,21 @@ const menuSchema = new mongoose.Schema(
       type: String,
       default: "🍽️", // default icon
     },
-    // Now, items will be an array of references to Dish model
+    // Now, items will be an array of objects with full dish data
     items: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Dish", // Referencing the Dish model
+        name: {
+          type: String,
+          required: [true, "Dish name is required"],
+        },
+        price: {
+          type: Number,
+          required: [true, "Dish price is required"],
+        },
+        category: {
+          type: String,
+          required: [true, "Dish category is required"],
+        },
       },
     ],
   },

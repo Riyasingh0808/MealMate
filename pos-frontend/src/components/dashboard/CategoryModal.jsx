@@ -1,48 +1,35 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import { addMenuItem, getMenuNames } from "../../https"; // Assuming getMenuNames fetches the menu data
+import { addMenu } from "../../https"; // Assuming addMenu adds a new category
 
-const AddDishModal = ({ setIsDishModalOpen }) => {
-  const [dishData, setDishData] = useState({
+const AddCategoryModal = ({ setIsCategoryModalOpen }) => {
+  const [categoryData, setCategoryData] = useState({
     name: "",
-    price: "",
-    category: "", // Initially empty, will be set by the dropdown
+    bgColor: "", // Optionally, you can allow selecting a background color
+    icon: "", // Optionally, you can allow selecting an icon
   });
-
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["menuNames"],
-    queryFn: getMenuNames, // Fetches the list of menu names from the backend
-  });
-
-  // Extract only the names from the data
-  const menuNames = data?.data?.map((menu) => menu.name) || [];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setDishData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleCategoryChange = (e) => {
-    const { value } = e.target;
-    setDishData((prev) => ({ ...prev, category: value }));
+    setCategoryData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dishMutation.mutate(dishData);
+    categoryMutation.mutate(categoryData);
   };
 
   const handleCloseModal = () => {
-    setIsDishModalOpen(false);
+    setIsCategoryModalOpen(false);
   };
 
-  const dishMutation = useMutation({
-    mutationFn: (reqData) => addMenuItem(reqData.category, reqData),
+  const categoryMutation = useMutation({
+    mutationFn: (reqData) => addMenu(reqData), // Assuming addMenu is used to add a new category
     onSuccess: (res) => {
-      setIsDishModalOpen(false);
+      setIsCategoryModalOpen(false);
       enqueueSnackbar(res.data.message, { variant: "success" });
     },
     onError: (error) => {
@@ -66,7 +53,7 @@ const AddDishModal = ({ setIsDishModalOpen }) => {
       >
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-[#f5f5f5] text-xl font-semibold">Add Dish</h2>
+          <h2 className="text-[#f5f5f5] text-xl font-semibold">Add Category</h2>
           <button
             onClick={handleCloseModal}
             className="text-[#f5f5f5] hover:text-red-500"
@@ -79,13 +66,13 @@ const AddDishModal = ({ setIsDishModalOpen }) => {
         <form onSubmit={handleSubmit} className="space-y-4 mt-10">
           <div>
             <label className="block text-[#ababab] mb-2 text-sm font-medium">
-              Dish Name
+              Category Name
             </label>
             <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
               <input
                 type="text"
                 name="name"
-                value={dishData.name}
+                value={categoryData.name}
                 onChange={handleInputChange}
                 className="bg-transparent flex-1 text-white focus:outline-none"
                 required
@@ -95,51 +82,31 @@ const AddDishModal = ({ setIsDishModalOpen }) => {
 
           <div>
             <label className="block text-[#ababab] mb-2 text-sm font-medium">
-              Price
+              Background Color (Optional)
             </label>
             <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
               <input
-                type="number"
-                name="price"
-                value={dishData.price}
+                type="color"
+                name="bgColor"
+                value={categoryData.bgColor}
                 onChange={handleInputChange}
                 className="bg-transparent flex-1 text-white focus:outline-none"
-                required
               />
             </div>
           </div>
 
           <div>
             <label className="block text-[#ababab] mb-2 text-sm font-medium">
-              Category
+              Icon (Optional)
             </label>
             <div className="flex items-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
-              {isLoading ? (
-                <p className="text-white">Loading...</p>
-              ) : isError ? (
-                <p className="text-red-500">Failed to load categories</p>
-              ) : (
-                <select
-                  name="category"
-                  value={dishData.category}
-                  onChange={handleCategoryChange}
-                  className="bg-transparent flex-1 text-white border border-[#444] rounded-lg focus:outline-none p-2"
-                  required
-                >
-                  <option value="" className="bg-[#262626] text-white">
-                    Select a category
-                  </option>
-                  {menuNames.map((name, index) => (
-                    <option
-                      key={index}
-                      value={name}
-                      className="bg-[#262626] text-white"
-                    >
-                      {name}
-                    </option>
-                  ))}
-                </select>
-              )}
+              <input
+                type="text"
+                name="icon"
+                value={categoryData.icon}
+                onChange={handleInputChange}
+                className="bg-transparent flex-1 text-white focus:outline-none"
+              />
             </div>
           </div>
 
@@ -147,7 +114,7 @@ const AddDishModal = ({ setIsDishModalOpen }) => {
             type="submit"
             className="w-full rounded-lg mt-10 mb-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold"
           >
-            Add Dish
+            Add Category
           </button>
         </form>
       </motion.div>
@@ -155,4 +122,4 @@ const AddDishModal = ({ setIsDishModalOpen }) => {
   );
 };
 
-export default AddDishModal;
+export default AddCategoryModal;
