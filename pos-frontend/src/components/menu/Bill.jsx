@@ -141,7 +141,7 @@ const Bill = () => {
           totalWithTax: totalPriceWithTax,
         },
         items: cartData,
-        table: customerData.table.tableId,
+        table: customerData.table?.tableId,
         paymentMethod: paymentMethod,
       };
       orderMutation.mutate(orderData);

@@ -6,8 +6,8 @@ require("dotenv").config();
 
 const createOrder = async (req, res, next) => {
   const razorpay = new Razorpay({
-    key_id: "",
-    key_secret: "",
+    key_id: "rzp_test_7dhq90l6uzfZ6j",
+    key_secret: "B5xbC8wiFweLcYPmeGKvc8hb",
   });
 
   try {

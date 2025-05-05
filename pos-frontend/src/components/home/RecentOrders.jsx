@@ -25,7 +25,7 @@ const RecentOrders = () => {
           <h1 className="text-[#f5f5f5] text-lg font-semibold tracking-wide">
             Recent Orders
           </h1>
-          <a href="" className="text-[#025cca] text-sm font-semibold">
+          <a href="/orders" className="text-[#025cca] text-sm font-semibold">
             View all
           </a>
         </div>
